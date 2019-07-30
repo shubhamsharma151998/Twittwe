@@ -1,0 +1,134 @@
+ # -*- coding: utf-8 -*-
+"""
+Created on Thu Jun 20 11:22:34 2019
+
+@author: Shubham
+"""
+
+import tweepy 
+  
+# Fill the X's with the credentials obtained by  
+# following the above mentioned procedure. 
+consumer_key = "FOa2S6sArS49x60OBrjDdg4gd" 
+consumer_secret = "7p0CTPorWkh7ozC5QXyi6h4T8lHadBawVGGhPIU3GS1j1ugGvA"
+access_key = "899716738777964544-Dz7Y5Fc2ojDt87CgTIti8JHFepdjRAh"
+access_secret = "cMhYz5sBxastaZKw5b5HbF4KO0281LxgD17s5tqwYCuFD"
+  
+# Function to extract tweets 
+def get_moretweet(username):
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret) 
+  
+        # Access to user's access key and access secret 
+    auth.set_access_token(access_key, access_secret) 
+  
+        # Calling api 
+    api = tweepy.API(auth) 
+    
+    dict={}
+        # Empty Array 
+    count=0
+    print("------------------------------------------------------")
+    for status in tweepy.Cursor(api.user_timeline, screen_name=username, tweet_mode="extended").items(1000):
+             #print(status)
+             print("..................................................................................")
+             count=count+1
+             #print(count)
+             dict.update({'count':count})
+             dict.update({'Text':status.full_text})
+             dict.update({'Tweet id':status.id})
+             #print("Text:",status.full_text)
+             #print("Tweet Created At:",status.created_at)
+             dict.update({'Tweet Created At':status.created_at})
+             #print("Display URL:",status.entities['media'][0]['display_url'])
+             #dict.update({'Display URL':status.entities['media'][0]['display_url']})
+             #print("Media URL:",status.entities['media'][0]['media_url'])
+             #print("Retweet Count",status.retweet_count)
+             dict.update({'Retweets Count':status.retweet_count})
+             #print("Likes",status.favorite_count)
+             dict.update({"Likes":status.favorite_count})
+             user=api.get_user(username)
+             #print(user)
+             #print("------------------------------------------------------")
+             #tweet = api.get_status(tweet_id)
+             #print(tweet.retweet_count)
+             #print(tweet.favorite_count)
+             #print("Username",user.name)
+             dict.update({"Username":user.name})
+             #print("Screen Name:",user.screen_name)
+             dict.update({"Screen Name":user.screen_name})
+             #print("userid:",user.id)
+             dict.update({"User ID":user.id})
+             #print("Location:",user.location)
+             dict.update({"Location":user.location})
+             #print("Following:",user.friends_count)
+             dict.update({"Following":user.friends_count})
+             #print("Tweet Created at",user.status.created_at)
+             dict.update({"Number of Post":user.statuses_count})
+             #print("Number of post:",user.statuses_count)
+             #print("Description:",user.description)
+             dict.update({"Description":user.description})
+             #print("Tweet:",user.status.text)
+             #print("Followers:",user.followers_count)
+             dict.update({"Followers":user.followers_count})
+             #print("Likes:",user.favourites_count)
+             dict.update({"Favourites_count":user.favourites_count})
+             #print("Date of Joining:",user.created_at)
+             dict.update({"Date of Joining":user.created_at})
+             #print("Retweet count:",user.retweet_count)
+             print(dict)
+             
+             print("------------------------------------------------------")
+
+def get_tweets(keyword): 
+          
+        # Authorization to consumer key and consumer secret 
+        auth = tweepy.OAuthHandler(consumer_key, consumer_secret) 
+  
+        # Access to user's access key and access secret 
+        auth.set_access_token(access_key, access_secret) 
+  
+        # Calling api 
+        api = tweepy.API(auth)
+        for tweet in tweepy.Cursor(api.search,q=keyword,count=100,
+                           lang="en",
+                           since="2017-04-03").items(1):
+            print(tweet)
+            print(tweet.created_at)
+            print(tweet.text)
+            print("----------------------------------------")
+            print("              Tweet Details             ")
+            print("----------------------------------------")
+            print("ReTweet Count>>>>>>>>>>>>>>>",tweet.retweet_count)
+            print("Favourites Count>>>>>>>>>>>>",tweet.user.favourites_count)
+            print("Followers Count>>>>>>>>>>>>>",tweet.user.followers_count)
+            print("Listed Count>>>>>>>>>>>>>>>>",tweet.user.listed_count)
+            print("Tweet Created At>>>>>>>>>>>>",tweet.created_at)
+            print("User Name>>>>>>>>>>>>>>>>>>>",tweet.user.name)
+            print("Description>>>>>>>>>>>>>>>>>",tweet.user.description)
+             
+            #print(tweet.user.media.media_url)
+            #print(tweet.user.entities.followers_count)
+            print("User Location>>>>>>>>>>>>>>>>",tweet.user.location)
+            print("Tweet>>>>>>>>>>>>>>>>>>>>>>>>",tweet.text)
+            print("Source of Tweet>>>>>>>>>>>>>>",tweet.source)
+            print("#Hashtags used in tweet>>>>>>",tweet.entities['hashtags'])
+            #print("Media_url:",tweet.entities['urls'])
+            print("User Id>>>>>>>>>>>>>>>>>>>>>>",tweet.user.id)
+            print("Account Created at>>>>>>>>>>>",tweet.user.created_at)
+            print("Profile image URL>>>>>>>>>>>>",tweet.user.profile_image_url)
+            print("Background image URL>>>>>>>>>",tweet.user.profile_background_image_url)
+            print("------------------------------------------------------------------------------")
+            try:
+                print("Display URl >>>>>>>>>>>>>>>",tweet.entities['urls'][0]['url'])
+                user_name=tweet.entities['user_mentions'][0]['screen_name']
+                user_name=user_name.replace(" ","")
+                user_name="@"+user_name
+                print(user_name)
+                get_moretweet(user_name)
+            except:
+                continue
+        
+        
+        
+if __name__ == '__main__':
+    get_tweets("#Samsung") 
